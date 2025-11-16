@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.springframework.org/schema/security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
       
@@ -12,7 +13,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-success text-white">
                         <h4 class="mb-0">
                             <i class="bi bi-person-plus"></i> Реєстрація нового користувача
                         </h4>
@@ -55,12 +56,23 @@
                                      class="invalid-feedback" th:errors="*{password}">Пароль занадто короткий</div>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="bi bi-check-lg"></i> Зареєструвати
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-check-lg"></i> Зареєструвати користувача
                             </button>
-                            <a th:href="@{/users/list}" class="btn btn-outline-secondary w-100 mt-2">
-                                <i class="bi bi-list-ul"></i> До списку
-                            </a>
+                            
+                            <div sec:authorize="!isAuthenticated()" class="text-center mt-3">
+                                <p class="text-muted">Або увійдіть, якщо маєте акаунт:</p>
+                                <a href="/login" class="btn btn-outline-primary">
+                                    <i class="bi bi-box-arrow-in-right"></i> Вхід
+                                </a>
+                            </div>
+                            
+                            <div sec:authorize="isAuthenticated()" class="text-center mt-3">
+                                <p class="text-muted">Або</p>
+                                <a href="/users/list" class="btn btn-outline-primary">
+                                    <i class="bi bi-list-ul"></i> Переглянути список
+                                </a>
+                            </div>
                         </form>
                     </div>
                 </div>

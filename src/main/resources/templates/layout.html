@@ -14,18 +14,54 @@
             <a class="navbar-brand" href="/users/list">
                 <i class="bi bi-people"></i> Користувачі
             </a>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/list">
-                        <i class="bi bi-list-ul"></i> Список
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/register">
-                        <i class="bi bi-person-plus"></i> Реєстрація
-                    </a>
-                </li>
-            </ul>
+            
+            <div class="navbar-nav ms-auto">
+                <div sec:authorize="!isAuthenticated()">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person"></i> Вхід
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="/login">
+                                    <i class="bi bi-box-arrow-in-right"></i> Логін
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/users/register">
+                                    <i class="bi bi-person-plus"></i> Реєстрація
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+                
+                <div sec:authorize="isAuthenticated()">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> 
+                            <span sec:authentication="name">Користувач</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="/users/list">
+                                    <i class="bi bi-list-ul"></i> Список користувачів
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/users/register">
+                                    <i class="bi bi-person-plus"></i> Додати користувача
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/logout">
+                                    <i class="bi bi-box-arrow-right"></i> Вихід
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+            </div>
         </div>
     </nav>
 

@@ -3,6 +3,8 @@ package com.student.myspringboot.service;
 import com.student.myspringboot.entity.User;
 import com.student.myspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -11,7 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+    @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
