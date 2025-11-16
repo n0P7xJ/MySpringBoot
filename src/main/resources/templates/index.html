@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      lang="uk"
+      layout:decorate="~{layout}">
+      
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE - Users App">Головна сторінка</title>
+</head>
+
+<body>
+    <th:block th:replace="~{layout :: breadcrumb}">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Головна</li>
+            </ol>
+        </nav>
+    </th:block>
+    
+    <!-- Основний контент -->
+    <th:block th:replace="~{layout :: content}">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">
+                            <i class="bi bi-house-door"></i> Ласкаво просимо!
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Додаток для керування користувачами готовий до роботи.</p>
+                        <div class="row text-center mt-4">
+                            <div class="col-md-6">
+                                <a href="/users/register" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-person-plus"></i> Реєстрація
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="/users/list" class="btn btn-outline-primary btn-lg">
+                                    <i class="bi bi-list-ul"></i> Список користувачів
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+    
+    <!-- Додаткові CSS (опціонально) -->
+    <th:block th:replace="~{layout :: css}">
+        <style>
+            .lead { font-size: 1.25rem; }
+        </style>
+    </th:block>
+    
+    <!-- Додаткові JS (опціонально) -->
+    <th:block th:replace="~{layout :: js}">
+        <script>
+            console.log('Головна сторінка завантажена');
+        </script>
+    </th:block>
+</body>
+</html>
