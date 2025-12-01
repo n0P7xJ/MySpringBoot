@@ -32,4 +32,10 @@ public class User {
     @NotBlank(message = "Пароль обов'язковий")
     @Size(min = 6, message = "Пароль: мінімум 6 символів")
     private String password;
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private Long resetTokenExpiry; // epoch millis
 }
