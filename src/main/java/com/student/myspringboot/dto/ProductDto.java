@@ -12,5 +12,7 @@ public class ProductDto {
     private BigDecimal price;
     private String sku;
     private Integer quantity;
+    private String imageUrl;
+    private String categoryName;
     private Instant createdAt;
 }

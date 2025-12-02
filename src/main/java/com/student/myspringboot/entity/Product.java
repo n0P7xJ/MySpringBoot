@@ -27,5 +27,13 @@ public class Product {
 
     private Integer quantity;
 
+    // URL to product image
+    private String imageUrl;
+
+    // Product category
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     private Instant createdAt;
 }

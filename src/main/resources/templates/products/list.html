@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title layout:title-pattern="$LAYOUT_TITLE - Додаток">Товари</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="container">
+        <h1 class="mb-4"><i class="bi bi-bag"></i> Список товарів</h1>
+        <div class="row" th:if="${products} != null and ${products.size()} > 0">
+            <div class="col-md-4 mb-4" th:each="p : ${products}">
+                <div class="card h-100 shadow-sm">
+                    <img th:src="${p.imageUrl} != null ? ${p.imageUrl} : '/img/placeholder.png'" class="card-img-top" alt="Фото товару" style="object-fit: cover; height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${p.name}">Назва товару</h5>
+                        <p class="card-text text-muted mb-1">
+                            <i class="bi bi-tag"></i>
+                            <span th:text="${p.categoryName} != null ? ${p.categoryName} : 'Без категорії'"></span>
+                        </p>
+                        <p class="card-text" th:text="${p.description}">Опис товару</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <span class="fw-bold" th:text="${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')} + ' ₴'">0.00 ₴</span>
+                        <span class="badge bg-secondary" th:text="'SKU: ' + ${p.sku}">SKU</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info" th:if="${products} == null or ${products.size()} == 0">
+            Товари відсутні.
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
