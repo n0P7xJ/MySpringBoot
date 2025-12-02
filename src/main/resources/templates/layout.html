@@ -11,13 +11,30 @@
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/users/list">
-                <i class="bi bi-people"></i> Користувачі
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-house-door"></i> MySpringBoot
             </a>
             
-            <div class="navbar-nav ms-auto">
-                <div sec:authorize="!isAuthenticated()">
-                    <li class="nav-item dropdown">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">
+                            <i class="bi bi-bag"></i> Товари
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/users/list">
+                            <i class="bi bi-people"></i> Користувачі
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown" sec:authorize="!isAuthenticated()">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person"></i> Вхід
                         </a>
@@ -34,10 +51,8 @@
                             </li>
                         </ul>
                     </li>
-                </div>
-                
-                <div sec:authorize="isAuthenticated()">
-                    <li class="nav-item dropdown">
+                    
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle"></i> 
                             <span sec:authentication="name">Користувач</span>
@@ -53,6 +68,7 @@
                                     <i class="bi bi-person-plus"></i> Додати користувача
                                 </a>
                             </li>
+                            <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="/logout">
                                     <i class="bi bi-box-arrow-right"></i> Вихід
@@ -60,7 +76,7 @@
                             </li>
                         </ul>
                     </li>
-                </div>
+                </ul>
             </div>
         </div>
     </nav>

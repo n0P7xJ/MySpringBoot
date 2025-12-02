@@ -29,4 +29,13 @@ public class ProductService {
                 .map(productMapper::toDto)
                 .collect(Collectors.toList());
     }
+    
+    public List<ProductDto> searchProducts(String search) {
+        if (search == null || search.trim().isEmpty()) {
+            return findAll();
+        }
+        return productRepository.searchProducts(search.trim()).stream()
+                .map(productMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
