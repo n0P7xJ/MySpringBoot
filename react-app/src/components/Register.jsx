@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { userService } from '../services/userService';
+import Input from './common/Input';
+import EmailInput from './common/EmailInput';
+import PhoneInput from './common/PhoneInput';
+import PasswordInput from './common/PasswordInput';
 import './Register.css';
 
 function Register() {
@@ -7,6 +11,8 @@ function Register() {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '',
+    image: '',
     password: '',
     confirmPassword: '',
   });
@@ -30,62 +36,35 @@ function Register() {
     }
   };
 
-  const validate = () => {
-    const newErrors = {};
-
-    if (!formData.firstName.trim() || formData.firstName.length < 2) {
-      newErrors.firstName = "Ім'я має містити мінімум 2 символи";
-    }
-
-    if (!formData.lastName.trim() || formData.lastName.length < 2) {
-      newErrors.lastName = 'Прізвище має містити мінімум 2 символи';
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Невірний формат email';
-    }
-
-    if (formData.password.length < 6) {
-      newErrors.password = 'Пароль має містити мінімум 6 символів';
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Паролі не співпадають';
-    }
-
-    return newErrors;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess('');
-    
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
 
     try {
       setLoading(true);
       setErrors({});
       
-      const { confirmPassword, ...userData } = formData;
-      await userService.registerUser(userData);
+      await userService.registerUser(formData);
       
       setSuccess('Реєстрація успішна! Тепер ви можете увійти.');
       setFormData({
         firstName: '',
         lastName: '',
         email: '',
+        phone: '',
+        image: '',
         password: '',
         confirmPassword: '',
       });
     } catch (err) {
-      setErrors({
-        submit: err.response?.data?.message || 'Помилка реєстрації. Спробуйте ще раз.',
-      });
+      // Server returns field-specific errors as an object
+      if (err.response?.data && typeof err.response.data === 'object') {
+        setErrors(err.response.data);
+      } else {
+        setErrors({
+          general: err.response?.data?.message || 'Помилка реєстрації. Спробуйте ще раз.',
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -97,78 +76,71 @@ function Register() {
         <h1>Реєстрація</h1>
         
         {success && <div className="success-message">{success}</div>}
-        {errors.submit && <div className="error-message">{errors.submit}</div>}
+        {errors.general && <div className="error-message">{errors.general}</div>}
 
         <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-group">
-            <label htmlFor="firstName">Ім'я</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              className={errors.firstName ? 'error' : ''}
-              placeholder="Введіть ім'я"
-            />
-            {errors.firstName && <span className="field-error">{errors.firstName}</span>}
-          </div>
+          <Input
+            label="Ім'я"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            error={errors.firstName}
+            placeholder="Введіть ім'я"
+            required
+          />
 
-          <div className="form-group">
-            <label htmlFor="lastName">Прізвище</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              className={errors.lastName ? 'error' : ''}
-              placeholder="Введіть прізвище"
-            />
-            {errors.lastName && <span className="field-error">{errors.lastName}</span>}
-          </div>
+          <Input
+            label="Прізвище"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            error={errors.lastName}
+            placeholder="Введіть прізвище"
+            required
+          />
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={errors.email ? 'error' : ''}
-              placeholder="email@example.com"
-            />
-            {errors.email && <span className="field-error">{errors.email}</span>}
-          </div>
+          <EmailInput
+            value={formData.email}
+            onChange={handleChange}
+            error={errors.email}
+            required
+          />
 
-          <div className="form-group">
-            <label htmlFor="password">Пароль</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={errors.password ? 'error' : ''}
-              placeholder="Мінімум 6 символів"
-            />
-            {errors.password && <span className="field-error">{errors.password}</span>}
-          </div>
+          <PhoneInput
+            value={formData.phone}
+            onChange={handleChange}
+            error={errors.phone}
+            required
+          />
 
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Підтвердіть пароль</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className={errors.confirmPassword ? 'error' : ''}
-              placeholder="Повторіть пароль"
-            />
-            {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
-          </div>
+          <Input
+            label="URL зображення (необов'язково)"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+            error={errors.image}
+            placeholder="https://example.com/avatar.jpg"
+          />
+
+          <PasswordInput
+            label="Пароль"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            error={errors.password}
+            placeholder="Мінімум 6 символів"
+            required
+          />
+
+          <PasswordInput
+            label="Підтвердіть пароль"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            error={errors.confirmPassword}
+            placeholder="Повторіть пароль"
+            required
+          />
 
           <button type="submit" disabled={loading} className="submit-button">
             {loading ? 'Реєстрація...' : 'Зареєструватися'}

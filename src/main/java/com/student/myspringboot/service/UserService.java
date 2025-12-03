@@ -39,9 +39,20 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean existsByPhone(String phone) {
+        return userRepository.existsByPhone(phone);
+    }
+
     public User saveUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Користувач з email '" + user.getEmail() + "' вже існує");
+        }
+        if (user.getPhone() != null && !user.getPhone().isEmpty() && userRepository.existsByPhone(user.getPhone())) {
+            throw new IllegalArgumentException("Користувач з телефоном '" + user.getPhone() + "' вже існує");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);

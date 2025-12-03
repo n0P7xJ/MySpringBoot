@@ -34,6 +34,8 @@ public class DataLoader implements CommandLineRunner {
             admin.setFirstName("Admin");
             admin.setLastName("User");
             admin.setEmail("admin@example.com");
+            admin.setPhone("+380501234567");
+            admin.setImage("https://i.pravatar.cc/150?img=1");
             admin.setPassword(passwordEncoder.encode("admin"));
             userRepository.save(admin);
 
@@ -41,6 +43,8 @@ public class DataLoader implements CommandLineRunner {
             testUser.setFirstName("Test");
             testUser.setLastName("User");
             testUser.setEmail("user@example.com");
+            testUser.setPhone("+380509876543");
+            testUser.setImage("https://i.pravatar.cc/150?img=2");
             testUser.setPassword(passwordEncoder.encode("user"));
             userRepository.save(testUser);
         }
