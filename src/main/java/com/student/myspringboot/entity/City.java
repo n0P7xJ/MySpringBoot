@@ -36,4 +36,7 @@ public class City {
     private Double latitude;
 
     private Double longitude;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 }

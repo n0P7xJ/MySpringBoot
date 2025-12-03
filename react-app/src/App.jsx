@@ -8,6 +8,8 @@ import UserList from './components/UserList';
 import Register from './components/Register';
 import Login from './components/Login';
 import AdminProducts from './components/admin/AdminProducts';
+import CityForm from './components/CityForm';
+import CityList from './components/CityList';
 import './App.css';
 
 function App() {
@@ -29,6 +31,7 @@ function App() {
             <ul className="nav-menu">
               <li><Link to="/" className="nav-link">Продукти</Link></li>
               <li><Link to="/categories" className="nav-link">Категорії</Link></li>
+              <li><Link to="/cities" className="nav-link">Міста</Link></li>
               
               {isAuthenticated ? (
                 <>
@@ -36,6 +39,7 @@ function App() {
                     <>
                       <li><Link to="/users" className="nav-link">Користувачі</Link></li>
                       <li><Link to="/admin/products" className="nav-link">Керування товарами</Link></li>
+                      <li><Link to="/cities/create" className="nav-link">Створити місто</Link></li>
                     </>
                   )}
                   <li className="user-info">
@@ -71,10 +75,12 @@ function App() {
           <Routes>
             <Route path="/" element={<ProductList />} />
             <Route path="/categories" element={<CategoryList />} />
+            <Route path="/cities" element={<CityList />} />
             <Route path="/users" element={<UserList />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/cities/create" element={<CityForm />} />
           </Routes>
         </main>
 
