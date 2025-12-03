@@ -16,14 +16,16 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
 }
 
 .navbar {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--navbar-bg);
+  color: var(--navbar-text);
   padding: 15px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.3s ease;
 }
 
 .nav-container {
@@ -38,17 +40,18 @@ body {
 .logo {
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: var(--navbar-text);
 }
 
 .nav-menu {
   display: flex;
   list-style: none;
   gap: 30px;
+  align-items: center;
 }
 
 .nav-link {
-  color: white;
+  color: var(--navbar-text);
   text-decoration: none;
   font-size: 16px;
   padding: 8px 16px;
@@ -60,19 +63,65 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+.theme-toggle {
+  background: transparent;
+  border: 2px solid var(--navbar-text);
+  color: var(--navbar-text);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-name {
+  color: var(--navbar-text);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+}
+
+.logout-button {
+  background: transparent;
+  border: 2px solid var(--navbar-text);
+  color: var(--navbar-text);
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
 .main-content {
   flex: 1;
   padding: 20px 0;
 }
 
 .footer {
-  background-color: #333;
-  color: white;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
   text-align: center;
   padding: 20px 0;
   margin-top: auto;
+  border-top: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .footer p {
   font-size: 14px;
+  color: var(--text-secondary);
 }

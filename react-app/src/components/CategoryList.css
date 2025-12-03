@@ -5,7 +5,7 @@
 }
 
 .category-list h1 {
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 30px;
 }
 
@@ -16,30 +16,30 @@
 }
 
 .category-card {
-  border: 2px solid #007bff;
+  border: 2px solid var(--category-border);
   border-radius: 8px;
   padding: 30px 20px;
-  background-color: white;
+  background-color: var(--bg-card);
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
   cursor: pointer;
 }
 
 .category-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-  background-color: #f8f9fa;
+  box-shadow: var(--shadow-md);
+  background-color: var(--category-hover-bg);
 }
 
 .category-card h3 {
-  color: #007bff;
+  color: var(--button-primary);
   margin-bottom: 10px;
   font-size: 20px;
 }
 
 .category-id {
-  color: #999;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
@@ -49,12 +49,13 @@
   text-align: center;
   padding: 40px;
   font-size: 18px;
+  color: var(--text-secondary);
 }
 
 .error {
-  color: #dc3545;
+  color: var(--error-color);
 }
 
 .no-categories {
-  color: #666;
+  color: var(--text-secondary);
 }

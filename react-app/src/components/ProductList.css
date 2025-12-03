@@ -5,7 +5,7 @@
 }
 
 .product-list h1 {
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 20px;
 }
 
@@ -18,9 +18,12 @@
 .search-input {
   flex: 1;
   padding: 10px 15px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 16px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
 .search-button,
@@ -34,21 +37,21 @@
 }
 
 .search-button {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--button-primary);
+  color: var(--navbar-text);
 }
 
 .search-button:hover {
-  background-color: #0056b3;
+  background-color: var(--button-primary-hover);
 }
 
 .clear-button {
-  background-color: #6c757d;
-  color: white;
+  background-color: var(--button-secondary);
+  color: var(--navbar-text);
 }
 
 .clear-button:hover {
-  background-color: #545b62;
+  background-color: var(--button-secondary-hover);
 }
 
 .products-grid {
@@ -58,17 +61,17 @@
 }
 
 .product-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 20px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .product-image {
@@ -80,13 +83,13 @@
 }
 
 .product-card h3 {
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 10px;
   font-size: 18px;
 }
 
 .product-description {
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 15px;
   font-size: 14px;
   line-height: 1.5;
@@ -103,24 +106,24 @@
 .product-price {
   font-size: 24px;
   font-weight: bold;
-  color: #28a745;
+  color: var(--success-color);
   margin-bottom: 5px;
 }
 
 .product-quantity {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
   margin-bottom: 5px;
 }
 
 .product-category {
-  color: #007bff;
+  color: var(--button-primary);
   font-size: 14px;
   margin-bottom: 5px;
 }
 
 .product-sku {
-  color: #999;
+  color: var(--text-muted);
   font-size: 12px;
   margin-top: 10px;
 }
@@ -131,12 +134,13 @@
   text-align: center;
   padding: 40px;
   font-size: 18px;
+  color: var(--text-secondary);
 }
 
 .error {
-  color: #dc3545;
+  color: var(--error-color);
 }
 
 .no-products {
-  color: #666;
+  color: var(--text-secondary);
 }

@@ -5,15 +5,16 @@
 }
 
 .user-list h1 {
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 30px;
 }
 
 .users-table {
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
 table {
@@ -22,8 +23,8 @@ table {
 }
 
 thead {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--navbar-bg);
+  color: var(--navbar-text);
 }
 
 th {
@@ -33,12 +34,12 @@ th {
 }
 
 tbody tr {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 0.2s;
 }
 
 tbody tr:hover {
-  background-color: #f8f9fa;
+  background-color: var(--category-hover-bg);
 }
 
 tbody tr:last-child {
@@ -47,7 +48,7 @@ tbody tr:last-child {
 
 td {
   padding: 15px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .loading,
@@ -56,12 +57,13 @@ td {
   text-align: center;
   padding: 40px;
   font-size: 18px;
+  color: var(--text-secondary);
 }
 
 .error {
-  color: #dc3545;
+  color: var(--error-color);
 }
 
 .no-users {
-  color: #666;
+  color: var(--text-secondary);
 }

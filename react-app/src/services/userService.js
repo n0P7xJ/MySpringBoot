@@ -10,4 +10,9 @@ export const userService = {
     const response = await api.get(`/users/${id}`);
     return response.data;
   },
+
+  registerUser: async (userData) => {
+    const response = await api.post('/users/register', userData);
+    return response.data;
+  },
 };

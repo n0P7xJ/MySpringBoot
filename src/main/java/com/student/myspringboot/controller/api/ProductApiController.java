@@ -1,6 +1,8 @@
 package com.student.myspringboot.controller.api;
 
 import com.student.myspringboot.dto.ProductDto;
+import com.student.myspringboot.mapper.ProductMapper;
+import com.student.myspringboot.repository.ProductRepository;
 import com.student.myspringboot.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,6 +20,8 @@ import java.util.List;
 public class ProductApiController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @GetMapping
     @Operation(summary = "Отримати всі продукти", description = "Повертає список всіх продуктів або результати пошуку")
@@ -33,5 +37,35 @@ public class ProductApiController {
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         ProductDto savedProduct = productService.save(productDto);
         return ResponseEntity.ok(savedProduct);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Отримати продукт за ID", description = "Повертає продукт по ідентифікатору")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+        return productRepository.findById(id)
+                .map(productMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Оновити продукт", description = "Оновлює існуючий продукт")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
+        if (!productRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        productDto.setId(id);
+        ProductDto updatedProduct = productService.save(productDto);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Видалити продукт", description = "Видаляє продукт з бази даних")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        if (!productRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        productRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
