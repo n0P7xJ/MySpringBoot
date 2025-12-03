@@ -31,6 +31,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public User saveUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Користувач з email '" + user.getEmail() + "' вже існує");
