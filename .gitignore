@@ -1,10 +1,20 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Backend (javaapi)
+javaapi/target/
+javaapi/.mvn/wrapper/maven-wrapper.jar
+javaapi/HELP.md
 
-### STS ###
+# Frontend (front)
+front/node_modules/
+front/dist/
+front/dist-ssr/
+front/*.local
+
+### IDE ###
+.idea
+*.iws
+*.iml
+*.ipr
+.vscode/
 .apt_generated
 .classpath
 .factorypath
@@ -13,25 +23,13 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+### OS ###
+.DS_Store
+Thumbs.db
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+### Uploads ###
+uploads/
+javaapi/uploads/
 
-### VS Code ###
-.vscode/
-
-.fake
-
-.log
+### Logs ###
+*.log

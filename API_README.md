@@ -1,103 +1,121 @@
-# Spring Boot REST API
+и# Spring Boot REST API
 
-## Опис проекту
+## Overview
 
-REST API для роботи з React додатком. Додаток надає ендпоінти для управління:
-- Продуктами (Products)
-- Категоріями (Categories)
-- Користувачами (Users)
+REST API backend for the React application. Provides endpoints for managing:
+- Products
+- Categories
+- Cities
+- Users
+- Photos
 
-## Технології
+## Technologies
 
 - **Spring Boot 3.5.7**
 - **Java 21**
 - **H2 Database** (in-memory)
 - **Spring Data JPA**
-- **Spring Security** (з CORS налаштуваннями)
-- **Swagger/OpenAPI 3** (документація API)
-- **MapStruct** (маппінг DTO)
+- **Spring Security** (with CORS configuration)
+- **Swagger/OpenAPI 3** (API documentation)
+- **MapStruct** (DTO mapping)
 - **Lombok**
+- **Scheduling** (for automatic photo cleanup)
 
-## Запуск додатку
+## Running the Application
 
 ```bash
+cd javaapi
 ./mvnw spring-boot:run
 ```
 
-Додаток запускається на порту **8080**.
+The application runs on port **8080**.
 
 ## API Endpoints
 
 ### Products API
-- `GET /api/products` - Отримати всі продукти
-- `GET /api/products?search={query}` - Пошук продуктів
-- `POST /api/products` - Створити новий продукт
+- `GET /api/products` - Get all products
+- `GET /api/products?search={query}` - Search products
+- `POST /api/products` - Create a new product
 
 ### Categories API
-- `GET /api/categories` - Отримати всі категорії
-- `GET /api/categories/{id}` - Отримати категорію за ID
-- `POST /api/categories` - Створити нову категорію
+- `GET /api/categories` - Get all categories
+- `GET /api/categories/{id}` - Get category by ID
+- `POST /api/categories` - Create a new category
+
+### Cities API
+- `GET /api/cities` - Get all cities
+- `GET /api/cities/{id}` - Get city by ID
+- `POST /api/cities` - Create a new city
+- `DELETE /api/cities/{id}` - Delete a city
 
 ### Users API
-- `GET /api/users` - Отримати всіх користувачів
-- `GET /api/users/{id}` - Отримати користувача за ID
+- `GET /api/users` - Get all users
+- `GET /api/users/{id}` - Get user by ID
+- `POST /api/users/register` - Register a new user
+
+### Photos API
+- `POST /api/photos/upload` - Upload photo from file
+- `POST /api/photos/upload-from-url` - Upload photo from URL
+- `GET /api/photos/city/{cityId}` - Get city photos
+- `DELETE /api/photos/{photoId}` - Delete photo
+- `POST /api/photos/cleanup` - Cleanup unattached photos
 
 ## Swagger UI
 
-Документація API доступна за адресою:
+API documentation is available at:
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
 
-Swagger надає інтерактивний інтерфейс для тестування всіх API ендпоінтів.
+Swagger provides an interactive interface for testing all API endpoints.
 
 ## OpenAPI Specification
 
-JSON специфікація доступна за адресою:
+JSON specification is available at:
 ```
 http://localhost:8080/v3/api-docs
 ```
 
 ## CORS Configuration
 
-API налаштовано для роботи з React додатками на портах:
+API is configured to work with React applications on ports:
 - `http://localhost:3000` (Create React App)
 - `http://localhost:5173` (Vite)
 
-Дозволені HTTP методи: GET, POST, PUT, DELETE, PATCH, OPTIONS
+Allowed HTTP methods: GET, POST, PUT, DELETE, PATCH, OPTIONS
 
-## База даних
+## Database
 
-Проект використовує H2 in-memory базу даних.
+The project uses H2 in-memory database.
 
-**H2 Console** доступна за адресою:
+**H2 Console** is available at:
 ```
 http://localhost:8080/h2-console
 ```
 
-Параметри підключення:
+Connection parameters:
 - JDBC URL: `jdbc:h2:mem:testdb`
 - Username: `sa`
-- Password: _(порожній)_
+- Password: _(empty)_
 
-## Приклади запитів
+## Request Examples
 
-### Отримати всі продукти
+### Get all products
 ```bash
 curl http://localhost:8080/api/products
 ```
 
-### Пошук продуктів
+### Search products
 ```bash
 curl "http://localhost:8080/api/products?search=laptop"
 ```
 
-### Створити новий продукт
+### Create a new product
 ```bash
 curl -X POST http://localhost:8080/api/products \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Новий продукт",
+    "name": "New Product",
     "description": "Опис продукту",
     "price": 999.99,
     "quantity": 10,

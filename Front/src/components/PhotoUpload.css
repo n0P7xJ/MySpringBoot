@@ -1,0 +1,121 @@
+.photo-upload-container {
+  padding: 20px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  outline: none;
+}
+
+.photo-upload-container:focus {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.upload-section {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.upload-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.upload-button:hover {
+  background-color: #0056b3;
+}
+
+.upload-label:has(.file-input:disabled) .upload-button {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.upload-hint {
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+.error-message {
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.photo-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.photo-item:hover {
+  transform: scale(1.05);
+}
+
+.photo-preview {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.delete-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background-color: #ff4444;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-style: italic;
+}
