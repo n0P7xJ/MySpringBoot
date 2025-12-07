@@ -1,9 +1,7 @@
-import React, { useState, useMemo, useRef } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { cityService } from '../services/cityService';
-import { uploadPhotoFromUrl } from '../services/photoService';
+import { getCityPhotos } from '../services/photoService';
 import Input from './common/Input';
 import CountrySelect from './common/CountrySelect';
 import PhotoUpload from './PhotoUpload';
@@ -11,7 +9,8 @@ import './CityForm.css';
 
 function CityForm() {
   const navigate = useNavigate();
-  const quillRef = useRef(null);
+  const { id } = useParams();
+  const isEditMode = !!id;
   
   const [formData, setFormData] = useState({
     name: '',
@@ -26,97 +25,49 @@ function CityForm() {
     photoIds: []
   });
 
+  const [photos, setPhotos] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
 
-  // Image upload handler for Quill editor - тепер завантажує через наш API
-  const imageHandler = async () => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
+  // Завантаження даних міста для редагування
+  useEffect(() => {
+    if (isEditMode) {
+      loadCityData();
+    }
+  }, [id]);
 
-    input.onchange = async () => {
-      const file = input.files[0];
-      if (file) {
-        try {
-          // Використовуємо наш новий API для завантаження
-          const formDataUpload = new FormData();
-          formDataUpload.append('file', file);
-          
-          const response = await fetch('http://localhost:8080/api/photos/upload', {
-            method: 'POST',
-            body: formDataUpload
-          });
-          
-          const result = await response.json();
-          const imageUrl = `http://localhost:8080${result.url}`;
-          
-          const quill = quillRef.current.getEditor();
-          const range = quill.getSelection(true);
-          quill.insertEmbed(range.index, 'image', imageUrl);
-        } catch (error) {
-          console.error('Error uploading image:', error);
-          alert('Помилка завантаження зображення');
-        }
-      }
-    };
-  };
-
-  // Перехоплення вставки URL в Quill editor
-  const handleQuillPaste = async (event) => {
-    const clipboardData = event.clipboardData || window.clipboardData;
-    const pastedData = clipboardData.getData('Text');
-    
-    // Перевіряємо чи це URL зображення
-    const imageUrlPattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i;
-    if (imageUrlPattern.test(pastedData)) {
-      event.preventDefault();
+  const loadCityData = async () => {
+    try {
+      setLoading(true);
+      const cityData = await cityService.getCityById(id);
       
-      try {
-        // Завантажуємо зображення з URL на наш сервер
-        const result = await uploadPhotoFromUrl(pastedData);
-        const imageUrl = `http://localhost:8080${result.url}`;
-        
-        const quill = quillRef.current.getEditor();
-        const range = quill.getSelection(true);
-        quill.insertEmbed(range.index, 'image', imageUrl);
-      } catch (error) {
-        console.error('Error uploading image from URL:', error);
-        alert('Помилка завантаження зображення з URL');
+      setFormData({
+        name: cityData.name || '',
+        region: cityData.region || '',
+        country: cityData.country || '',
+        population: cityData.population?.toString() || '',
+        postalCode: cityData.postalCode || '',
+        latitude: cityData.latitude?.toString() || '',
+        longitude: cityData.longitude?.toString() || '',
+        description: cityData.description || '',
+        imageUrl: cityData.imageUrl || '',
+        photoIds: []
+      });
+
+      // Завантажуємо фото міста
+      if (cityData.id) {
+        const cityPhotos = await getCityPhotos(cityData.id);
+        setPhotos(cityPhotos);
       }
+    } catch (err) {
+      setErrors({
+        general: 'Помилка завантаження даних міста: ' + err.message
+      });
+    } finally {
+      setLoading(false);
     }
   };
-
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'align': [] }],
-        ['link', 'image', 'video'],
-        ['clean']
-      ],
-      handlers: {
-        image: imageHandler
-      }
-    },
-    clipboard: {
-      matchVisual: false
-    }
-  }), []);
-
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'color', 'background',
-    'list', 'bullet',
-    'align',
-    'link', 'image', 'video'
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -128,19 +79,6 @@ function CityForm() {
       setErrors({
         ...errors,
         [name]: '',
-      });
-    }
-  };
-
-  const handleDescriptionChange = (value) => {
-    setFormData({
-      ...formData,
-      description: value,
-    });
-    if (errors.description) {
-      setErrors({
-        ...errors,
-        description: '',
       });
     }
   };
@@ -161,23 +99,30 @@ function CityForm() {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
       };
 
-      await cityService.createCity(cityData);
-
-      setSuccess('Місто успішно створено!');
-      
-      // Reset form
-      setFormData({
-        name: '',
-        region: '',
-        country: '',
-        population: '',
-        postalCode: '',
-        latitude: '',
-        longitude: '',
-        description: '',
-        imageUrl: '',
-        photoIds: []
-      });
+      if (isEditMode) {
+        // Режим редагування
+        await cityService.updateCity(id, cityData);
+        setSuccess('Місто успішно оновлено!');
+      } else {
+        // Режим створення
+        await cityService.createCity(cityData);
+        setSuccess('Місто успішно створено!');
+        
+        // Reset form
+        setFormData({
+          name: '',
+          region: '',
+          country: '',
+          population: '',
+          postalCode: '',
+          latitude: '',
+          longitude: '',
+          description: '',
+          imageUrl: '',
+          photoIds: []
+        });
+        setPhotos([]);
+      }
 
       // Redirect after 2 seconds
       setTimeout(() => {
@@ -189,7 +134,7 @@ function CityForm() {
         setErrors(err.response.data);
       } else {
         setErrors({
-          general: err.response?.data?.message || 'Помилка створення міста. Спробуйте ще раз.',
+          general: err.response?.data?.message || `Помилка ${isEditMode ? 'оновлення' : 'створення'} міста. Спробуйте ще раз.`,
         });
       }
     } finally {
@@ -197,17 +142,37 @@ function CityForm() {
     }
   };
 
-  const handlePhotosChange = (photoIds) => {
-    setFormData({
-      ...formData,
-      photoIds
-    });
+  const handlePhotosChange = (photosData) => {
+    if (isEditMode) {
+      // В режимі редагування отримуємо масив об'єктів фото
+      setPhotos(photosData);
+      setFormData({
+        ...formData,
+        photoIds: photosData.map(p => p.id)
+      });
+    } else {
+      // В режимі створення отримуємо масив ID
+      setFormData({
+        ...formData,
+        photoIds: photosData
+      });
+    }
   };
+
+  console.log('About to render, loading:', loading, 'isEditMode:', isEditMode);
+
+  if (loading && isEditMode) {
+    return (
+      <div className="city-form-container">
+        <div className="loading">Завантаження даних міста...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="city-form-container">
       <div className="city-form-card">
-        <h1>Створити нове місто</h1>
+        <h1>{isEditMode ? 'Редагувати місто' : 'Створити нове місто'}</h1>
 
         {success && <div className="success-message">{success}</div>}
         {errors.general && <div className="error-message">{errors.general}</div>}
@@ -301,27 +266,23 @@ function CityForm() {
             </label>
             <PhotoUpload 
               onPhotosChange={handlePhotosChange}
-              initialPhotos={[]}
+              initialPhotos={photos}
+              isEditMode={isEditMode}
             />
           </div>
 
           <div className="form-group">
             <label className="editor-label">
               Опис міста
-              <span className="editor-hint"> (можна додавати зображення)</span>
             </label>
-            <div onPaste={handleQuillPaste}>
-              <ReactQuill
-                ref={quillRef}
-                theme="snow"
-                value={formData.description}
-                onChange={handleDescriptionChange}
-                modules={modules}
-                formats={formats}
-                placeholder="Введіть опис міста з можливістю додавання зображень..."
-                className={errors.description ? 'quill-error' : ''}
-              />
-            </div>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Введіть опис міста..."
+              className={`city-description-textarea ${errors.description ? 'error' : ''}`}
+              rows="8"
+            />
             {errors.description && <span className="error-message">{errors.description}</span>}
           </div>
 
@@ -335,7 +296,7 @@ function CityForm() {
               Скасувати
             </button>
             <button type="submit" disabled={loading} className="submit-button">
-              {loading ? 'Створення...' : 'Створити місто'}
+              {loading ? (isEditMode ? 'Оновлення...' : 'Створення...') : (isEditMode ? 'Оновити місто' : 'Створити місто')}
             </button>
           </div>
         </form>

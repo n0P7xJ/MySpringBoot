@@ -8,9 +8,34 @@
   margin-bottom: 2rem;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .city-list-header h1 {
   color: var(--text-color);
-  margin-bottom: 1rem;
+  margin: 0;
+}
+
+.create-city-button {
+  padding: 0.75rem 1.5rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.create-city-button:hover {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 .search-bar {
@@ -145,7 +170,7 @@
 
 .view-button {
   width: calc(100% - 3rem);
-  margin: 0 1.5rem 1.5rem;
+  margin: 0 1.5rem 1rem;
   padding: 0.75rem;
   background: var(--primary-color, #007bff);
   color: white;
@@ -159,6 +184,45 @@
 
 .view-button:hover {
   background: var(--primary-color-dark, #0056b3);
+}
+
+/* Admin Actions */
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 1.5rem 1.5rem;
+}
+
+.edit-button,
+.delete-city-button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.edit-button {
+  background: #28a745;
+  color: white;
+}
+
+.edit-button:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.delete-city-button {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-city-button:hover {
+  background: #c82333;
+  transform: translateY(-1px);
 }
 
 /* Modal */

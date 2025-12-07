@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
+import api from '../services/api';
 import './Login.css';
 
 function Login() {
@@ -36,24 +37,23 @@ function Login() {
       setLoading(true);
       setError('');
       
-      // Simulate login - check for admin user
-      const isAdmin = formData.email === 'admin@example.com';
-      
-      const userData = {
+      // Виклик API для авторизації
+      const response = await api.post('/auth/login', {
         email: formData.email,
-        firstName: isAdmin ? 'Admin' : 'User',
-        lastName: isAdmin ? 'User' : 'Name',
-        role: isAdmin ? 'ADMIN' : 'USER',
-      };
+        password: formData.password
+      });
+      
+      const userData = response.data;
       
       // Dispatch login action
       dispatch(login(userData));
       
-      // Redirect to products page
+      // Redirect to home page
       navigate('/');
       
     } catch (err) {
-      setError('Невірний email або пароль');
+      console.error('Login error:', err);
+      setError(err.response?.data || 'Невірний email або пароль');
     } finally {
       setLoading(false);
     }

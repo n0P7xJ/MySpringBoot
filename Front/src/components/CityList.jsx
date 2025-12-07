@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { cityService } from '../services/cityService';
 import './CityList.css';
 
 function CityList() {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user?.role === 'ADMIN';
+  
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,6 +54,24 @@ function CityList() {
     setSelectedCity(null);
   };
 
+  const handleEditCity = (cityId) => {
+    navigate(`/cities/edit/${cityId}`);
+  };
+
+  const handleDeleteCity = async (cityId) => {
+    if (!window.confirm('Ви впевнені, що хочете видалити це місто?')) {
+      return;
+    }
+
+    try {
+      await cityService.deleteCity(cityId);
+      await loadCities();
+    } catch (err) {
+      setError('Помилка видалення міста: ' + err.message);
+      console.error(err);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Завантаження міст...</div>;
   }
@@ -59,7 +83,14 @@ function CityList() {
   return (
     <div className="city-list-container">
       <div className="city-list-header">
-        <h1>Міста</h1>
+        <div className="header-top">
+          <h1>Міста</h1>
+          {isAdmin && (
+            <button onClick={() => navigate('/cities/create')} className="create-city-button">
+              ➕ Створити місто
+            </button>
+          )}
+        </div>
         <div className="search-bar">
           <input
             type="text"
@@ -122,6 +153,23 @@ function CityList() {
               >
                 Детальніше
               </button>
+              
+              {isAdmin && (
+                <div className="admin-actions">
+                  <button 
+                    onClick={() => handleEditCity(city.id)} 
+                    className="edit-button"
+                  >
+                    ✏️ Редагувати
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteCity(city.id)} 
+                    className="delete-city-button"
+                  >
+                    🗑️ Видалити
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

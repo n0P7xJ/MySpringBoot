@@ -81,6 +81,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/admin/products" element={<AdminProducts />} />
             <Route path="/cities/create" element={<CityForm />} />
+            <Route path="/cities/edit/:id" element={<CityForm />} />
           </Routes>
         </main>
 

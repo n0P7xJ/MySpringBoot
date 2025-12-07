@@ -1,11 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { uploadPhoto, uploadPhotoFromUrl, deletePhoto } from '../services/photoService';
 import './PhotoUpload.css';
 
-const PhotoUpload = ({ onPhotosChange, initialPhotos = [] }) => {
+const PhotoUpload = ({ onPhotosChange, initialPhotos = [], isEditMode = false }) => {
   const [photos, setPhotos] = useState(initialPhotos);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Оновлюємо фото при зміні initialPhotos (для режиму редагування)
+  useEffect(() => {
+    setPhotos(initialPhotos);
+  }, [initialPhotos]);
 
   // Завантаження фото з файлу
   const handleFileUpload = async (event) => {
@@ -19,7 +24,13 @@ const PhotoUpload = ({ onPhotosChange, initialPhotos = [] }) => {
       
       const newPhotos = [...photos, ...uploadedPhotos];
       setPhotos(newPhotos);
-      onPhotosChange(newPhotos.map(p => p.id));
+      
+      // В режимі редагування повертаємо об'єкти фото, а не тільки ID
+      if (isEditMode) {
+        onPhotosChange(newPhotos);
+      } else {
+        onPhotosChange(newPhotos.map(p => p.id));
+      }
     } catch (err) {
       setError('Помилка при завантаженні фото: ' + err.message);
     } finally {
@@ -55,7 +66,12 @@ const PhotoUpload = ({ onPhotosChange, initialPhotos = [] }) => {
                 const uploadedPhoto = await uploadPhotoFromUrl(text);
                 const newPhotos = [...photos, uploadedPhoto];
                 setPhotos(newPhotos);
-                onPhotosChange(newPhotos.map(p => p.id));
+                
+                if (isEditMode) {
+                  onPhotosChange(newPhotos);
+                } else {
+                  onPhotosChange(newPhotos.map(p => p.id));
+                }
               } catch (err) {
                 setError('Помилка при завантаженні з URL: ' + err.message);
               }
@@ -68,14 +84,19 @@ const PhotoUpload = ({ onPhotosChange, initialPhotos = [] }) => {
         const uploadedPhotos = await Promise.all(uploadPromises);
         const newPhotos = [...photos, ...uploadedPhotos];
         setPhotos(newPhotos);
-        onPhotosChange(newPhotos.map(p => p.id));
+        
+        if (isEditMode) {
+          onPhotosChange(newPhotos);
+        } else {
+          onPhotosChange(newPhotos.map(p => p.id));
+        }
       }
     } catch (err) {
       setError('Помилка при обробці вставки: ' + err.message);
     } finally {
       setLoading(false);
     }
-  }, [photos, onPhotosChange]);
+  }, [photos, onPhotosChange, isEditMode]);
 
   // Перевірка чи це URL зображення
   const isImageUrl = (text) => {
@@ -90,7 +111,12 @@ const PhotoUpload = ({ onPhotosChange, initialPhotos = [] }) => {
       await deletePhoto(photoId);
       const newPhotos = photos.filter(p => p.id !== photoId);
       setPhotos(newPhotos);
-      onPhotosChange(newPhotos.map(p => p.id));
+      
+      if (isEditMode) {
+        onPhotosChange(newPhotos);
+      } else {
+        onPhotosChange(newPhotos.map(p => p.id));
+      }
     } catch (err) {
       setError('Помилка при видаленні фото: ' + err.message);
     }
